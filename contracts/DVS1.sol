@@ -14,11 +14,13 @@ contract DVS1 {
     }
 
     Proposal[] public proposals;
+    mapping(address => bool) internal voters;
 
     constructor() {
         owner = msg.sender;
     }
 
+    //function for create new proposal
     function createProposal(string memory _description) public {
         uint256 proposalId = proposals.length;
 
@@ -31,7 +33,26 @@ contract DVS1 {
 
     }
 
-    function getProposalInfo(uint256 _proposalId) public view returns(Proposal){
+    //function for getting proposal Information
+    function getProposalInfo(uint256 _proposalId) public view returns(Proposal memory){
         return proposals[_proposalId];
     }
+
+    //function for update proposal state
+    function updateProposalState(uint256 _proposalId) public {
+        require(owner == msg.sender, "Only owner can change/update the state.");
+        proposals[_proposalId].isOpen = false;
+    }
+
+    //function for voter to cast their vote
+    function castVote(uint256 _proposalId) public {
+        require(voters[msg.sender] == false, "You already cast your vote");
+
+        require(proposals[_proposalId].isOpen == true, "The proposal is not open any more.");
+
+        proposals[_proposalId].voteCount ++;
+
+        voters[msg.sender] = true;
+    }
+
 }
