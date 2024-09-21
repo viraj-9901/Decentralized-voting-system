@@ -55,4 +55,19 @@ contract DVS1 {
         voters[msg.sender] = true;
     }
 
+    //function for winner proposal
+    function getResult() public view returns(uint256){
+        uint256 winner;
+        uint256 highestVoteCount = 0;
+
+        for(uint256 i = 0; i < proposals.length; i++){
+            if(proposals[i].voteCount > highestVoteCount){
+                highestVoteCount = proposals[i].voteCount;
+                winner = proposals[i].proposalId;
+            }
+        }
+        
+        return winner;
+    }   
+
 }
